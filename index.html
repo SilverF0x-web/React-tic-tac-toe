@@ -18,6 +18,8 @@
     const SYMBOL_X = 'X';
     const SYMBOL_O = 'O';
     function App() {
+        // функция useState возвращает состояние и функцию меняющую это состояние, принимая первым аргументом изначальное состояние
+        const [state, setState] = React.useState(SYMBOL_O);
         const cells = [null, null, null, SYMBOL_O, SYMBOL_X, SYMBOL_O, null, null, null,];
         const currentStep = SYMBOL_O; // текщий ход
         const getSymbolClassName = (symbol) => {
@@ -29,14 +31,27 @@
         // функции возвращающие JSX не явлюяются компонентами
         const renderSymbol = (symbol) => <span className={`symbol ${getSymbolClassName(symbol)}`}>{symbol}</span>
 
+        // функция обработки содержимого клетки
+
+        const handleCellClick = (index) => {
+            // React никак не может узнать, что мы меняем массив текущих ячеек для этого используется useState
+            // console.log('click', index);
+            // React узнает, что мы что-то поменяли через функцию setState
+            setState(SYMBOL_X);
+            cells[index] = currentStep;
+        }
+
         return (
             <div className="game">
                 <div className="game-info">
-                    Ход: {renderSymbol(currentStep)}
+                    Ход: {renderSymbol(state)}
                 </div>
                 <div className="game-field">
                     {cells.map((symbol,index) => {
-                        return <button key={index} className="cell">{symbol ? renderSymbol(symbol) : null}</button>
+                        // передаем () => handleCellClick для того чтобы не передавать ссылку а вызывать каждый раз функцию для каждой кнопки
+                        return <button key={index} className="cell" onClick={() => handleCellClick(index)}>
+                            {symbol ? renderSymbol(symbol) : null}
+                        </button>
                     })}
                 </div>
             </div>
