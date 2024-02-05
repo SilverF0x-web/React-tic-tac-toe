@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <title>Знакомимся с React на практике</title>
 </head>
 <body>
@@ -48,19 +48,8 @@
 
     function App() {
         const [cells, setCells] = React.useState([null, null, null, null, null, null, null, null, null,]);
-        const [currentStep, setCurrentStep] = React.useState(SYMBOL_O); // текщий ход
-        // опрделяем состояние для хранения победившей последовательности
-        const [winnerSequence, setWinnerSequence] = React.useState(null);
-        const getSymbolClassName = (symbol) => {
-            if (symbol === SYMBOL_O) return 'symbol--o'
-            if (symbol === SYMBOL_X) return 'symbol--x'
-            return ''
-        }; // функция helper для отображения классов
-
-        // функции возвращающие JSX не явлюяются компонентами
-        const renderSymbol = (symbol) => <span className={`symbol ${getSymbolClassName(symbol)}`}>{symbol}</span>
-
-        // функция обработки содержимого клетки
+        const [currentStep, setCurrentStep] = React.useState(SYMBOL_O);
+        const [winnerSequence, setWinnerSequence] = React.useState();
 
         const handleCellClick = (index) => {
             if(cells[index] || winnerSequence) {
@@ -76,7 +65,15 @@
             setWinnerSequence(winner);
         }
 
-        const winnerSymbol = winnerSequence ? cells[winnerSequence[0]] : undefined;
+        const getSymbolClassName = (symbol) => {
+            if (symbol === SYMBOL_O) return 'symbol--o'
+            if (symbol === SYMBOL_X) return 'symbol--x'
+            return ''
+        };
+
+        const renderSymbol = (symbol) => <span className={`symbol ${getSymbolClassName(symbol)}`}>{symbol}</span>
+
+        const winnerSymbol = winnerSequence ? cells[winnerSequence[0]] : undefined
 
         return (
             <div className="game">
